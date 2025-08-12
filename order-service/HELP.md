@@ -1,7 +1,7 @@
 # Read Me First
 The following was discovered as part of building this project:
 
-* The original package name 'com.michal-Michal Miotk.ois.orderservice' is invalid and this project uses 'com.michal_Michal.Miotk.ois.orderservice' instead.
+* The original package name 'com.michal-mm.ois.orderservice' is invalid and this project uses 'com.michal_mm.ois.orderservice' instead.
 
 # Getting Started
 

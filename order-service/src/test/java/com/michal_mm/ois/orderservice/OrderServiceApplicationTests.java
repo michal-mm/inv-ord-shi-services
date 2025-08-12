@@ -1,10 +1,10 @@
-package com.michal_Michal.Miotk.ois.orderservice;
+package com.michal_mm.ois.orderservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class OrderInvetoryShippingUiApplicationTests {
+class OrderServiceApplicationTests {
 
 	@Test
 	void contextLoads() {

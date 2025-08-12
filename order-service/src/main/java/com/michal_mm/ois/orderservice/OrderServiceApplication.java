@@ -1,13 +1,13 @@
-package com.michal_Michal.Miotk.ois.orderservice;
+package com.michal_mm.ois.orderservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class OrderInvetoryShippingUiApplication {
+public class OrderServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(OrderInvetoryShippingUiApplication.class, args);
+		SpringApplication.run(OrderServiceApplication.class, args);
 	}
 
 }
