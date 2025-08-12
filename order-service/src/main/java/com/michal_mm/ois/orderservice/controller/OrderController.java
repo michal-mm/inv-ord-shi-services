@@ -1,21 +1,36 @@
 package com.michal_mm.ois.orderservice.controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.michal_mm.ois.orderservice.model.OrderRest;
 
 @RestController()
 @RequestMapping("/orders")
 public class OrderController {
 
 	@GetMapping
-	public List<String> getAllOrders() {
+	public List<OrderRest> getAllOrders() {
 		
-		return List.of(
-				"Simple order as String #1", 
-				"Simple order as String #2",
-				"Simple order as String #3");
+		OrderRest order1 = new OrderRest(UUID.randomUUID(),
+								UUID.randomUUID(), 
+								"Item #1", 5, "ORDER #1");
+		
+		OrderRest order2 = new OrderRest(UUID.randomUUID(),
+				UUID.randomUUID(), 
+				"Item #2", 20, "ORDER #2");
+		
+		OrderRest order3 = new OrderRest(UUID.randomUUID(),
+				UUID.randomUUID(), 
+				"Item #3", 123, "ORDER #3");
+
+
+		
+		
+		return List.of(order1, order2, order3);
 	}
 }
