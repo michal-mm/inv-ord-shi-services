@@ -3,11 +3,16 @@ package com.michal_mm.ois.orderservice.controller;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.michal_mm.ois.orderservice.model.CreateOrderRequest;
 import com.michal_mm.ois.orderservice.model.OrderRest;
 
 @RestController()
@@ -42,5 +47,19 @@ public class OrderController {
 									"Test Item", 999, "TEST ORDER Name");
 		
 		return orderToReturn;
+	}
+	
+	
+	@PostMapping()
+	@ResponseStatus(HttpStatus.CREATED)
+	public OrderRest createOrder (@RequestBody CreateOrderRequest createOrderRequest) {
+		OrderRest orderRest = new OrderRest(
+				UUID.randomUUID(),
+				createOrderRequest.getItemId(), 
+				"Item name to come from DB", 
+				-10, 
+				createOrderRequest.getOrderName() );
+		
+		return orderRest;
 	}
 }
