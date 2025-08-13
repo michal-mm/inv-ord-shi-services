@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,5 +33,14 @@ public class OrderController {
 		
 		
 		return List.of(order1, order2, order3);
+	}
+	
+	@GetMapping("/{orderId}")
+	public OrderRest getOrderById(@PathVariable UUID orderId) {
+		OrderRest orderToReturn = new OrderRest(orderId, 
+									UUID.randomUUID(),
+									"Test Item", 999, "TEST ORDER Name");
+		
+		return orderToReturn;
 	}
 }
