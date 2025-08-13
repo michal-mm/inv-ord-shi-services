@@ -14,52 +14,34 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.michal_mm.ois.orderservice.model.CreateOrderRequest;
 import com.michal_mm.ois.orderservice.model.OrderRest;
+import com.michal_mm.ois.orderservice.service.OrderService;
 
 @RestController()
 @RequestMapping("/orders")
 public class OrderController {
+	
+	private final OrderService orderService;
+	
+	
+	public OrderController(OrderService orderService) {
+		this.orderService = orderService;
+	}
+	
 
 	@GetMapping
 	public List<OrderRest> getAllOrders() {
-		
-		OrderRest order1 = new OrderRest(UUID.randomUUID(),
-								UUID.randomUUID(), 
-								"Item #1", 5, "ORDER #1");
-		
-		OrderRest order2 = new OrderRest(UUID.randomUUID(),
-				UUID.randomUUID(), 
-				"Item #2", 20, "ORDER #2");
-		
-		OrderRest order3 = new OrderRest(UUID.randomUUID(),
-				UUID.randomUUID(), 
-				"Item #3", 123, "ORDER #3");
-
-
-		
-		
-		return List.of(order1, order2, order3);
+		return orderService.getAllOrders();
 	}
 	
 	@GetMapping("/{orderId}")
 	public OrderRest getOrderById(@PathVariable UUID orderId) {
-		OrderRest orderToReturn = new OrderRest(orderId, 
-									UUID.randomUUID(),
-									"Test Item", 999, "TEST ORDER Name");
-		
-		return orderToReturn;
+		return orderService.getOrderById(orderId);
 	}
 	
 	
 	@PostMapping()
 	@ResponseStatus(HttpStatus.CREATED)
 	public OrderRest createOrder (@RequestBody CreateOrderRequest createOrderRequest) {
-		OrderRest orderRest = new OrderRest(
-				UUID.randomUUID(),
-				createOrderRequest.getItemId(), 
-				"Item name to come from DB", 
-				-10, 
-				createOrderRequest.getOrderName() );
-		
-		return orderRest;
-	}
+		return orderService.createOrder(createOrderRequest)
+;	}
 }

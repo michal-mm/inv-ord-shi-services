@@ -23,7 +23,7 @@ public class OrderControllerTest {
 	public void testGetAllOrders_simpleGETScenarioWithFiuxedResponse() {
 		
 		List<OrderRest> orders = orderController.getAllOrders();
-		assertEquals(3, orders.size());
+		assertEquals(4, orders.size());
 	}
 	
 	@Test
