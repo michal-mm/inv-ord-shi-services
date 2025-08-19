@@ -25,19 +25,16 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public List<OrderRest> getAllOrders() {
-		OrderRest order1 = new OrderRest(UUID.randomUUID(),
-				UUID.randomUUID(), "Item #1", 5, "ORDER #1");
-
-		OrderRest order2 = new OrderRest(UUID.randomUUID(), 
-				UUID.randomUUID(), "Item #2", 20, "ORDER #2");
-
-		OrderRest order3 = new OrderRest(UUID.randomUUID(), 
-				UUID.randomUUID(), "Item #3", 123, "ORDER #3");
 		
-		OrderRest order4 = new OrderRest(UUID.randomUUID(), 
-				UUID.randomUUID(), "Item #4", 321, "ORDER #4");
-		
-		return List.of(order1, order2, order3, order4);
+		return orderRepository.findAll().stream()
+				.map(orderEntity -> new OrderRest(
+						orderEntity.getId(),
+						orderEntity.getItemId(),
+						"FIXED ITEM NAME with FIXED PRICE",
+						12345,
+						orderEntity.getOrderName()
+						))
+				.toList();
 	}
 
 	@Override
