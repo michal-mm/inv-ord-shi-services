@@ -27,42 +27,49 @@ public class OrderServiceImpl implements OrderService {
 	public List<OrderRest> getAllOrders() {
 		
 		return orderRepository.findAll().stream()
-				.map(orderEntity -> new OrderRest(
-						orderEntity.getId(),
-						orderEntity.getItemId(),
-						"FIXED ITEM NAME with FIXED PRICE",
-						12345,
-						orderEntity.getOrderName()
-						))
+				.map(orderEntity -> getOrderRestFromOrderEntity(orderEntity))
 				.toList();
 	}
 
 	@Override
 	public OrderRest getOrderById(UUID orderId) {
-		OrderEntity orderEntity = orderRepository.findOrderById(orderId);
-		
-		OrderRest orderRestToReturn = new OrderRest(
+		return getOrderRestFromOrderEntity(orderRepository.findOrderById(orderId));
+	}
+
+	private OrderRest getOrderRestFromOrderEntity(OrderEntity orderEntity) {
+		return new OrderRest(
 								orderEntity.getId(),
 								orderEntity.getItemId(),
 								"FIXED ITEM NAME with FIXED PRICE",
 								12345,
 								orderEntity.getOrderName()
 				);
-				
-
-		return orderRestToReturn;
 	}
+	
+	private OrderEntity getOrderEntityFromOrderRest(OrderRest orderRest) {
+		return new OrderEntity(orderRest.getOrderId(),
+				orderRest.getItemId(),
+				orderRest.getOrderName(),
+				8888);
+	}
+	
+	
 
 	@Override
 	public OrderRest createOrder(CreateOrderRequest createOrderRequest) {
 		OrderRest orderRest = new OrderRest(
 				UUID.randomUUID(),
-				createOrderRequest.getItemId(), 
-				"Item name to come from DB", 
-				-10, 
-				createOrderRequest.getOrderName() );
+				createOrderRequest.getItemId(),
+				"Fixed item name through POST request",
+				9999,
+				createOrderRequest.getOrderName()
+				);
 		
-		return orderRest;
+		OrderEntity orderEntity = getOrderEntityFromOrderRest(orderRest);
+		
+		OrderEntity savedOrderEntity = orderRepository.save(orderEntity);
+		
+		return getOrderRestFromOrderEntity(savedOrderEntity);
 	}
 
 	
