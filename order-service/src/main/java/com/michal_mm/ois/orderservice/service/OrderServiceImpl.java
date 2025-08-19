@@ -42,9 +42,8 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public OrderRest getOrderById(UUID orderId) {
-//		OrderRest orderToReturn = new OrderRest(orderId, 
-//				UUID.randomUUID(), "Test Item", 999, "TEST ORDER Name");
-		OrderEntity orderEntity = orderRepository.getOrderById(orderId);
+		OrderEntity orderEntity = orderRepository.findOrderById(orderId);
+		
 		OrderRest orderRestToReturn = new OrderRest(
 								orderEntity.getId(),
 								orderEntity.getItemId(),
