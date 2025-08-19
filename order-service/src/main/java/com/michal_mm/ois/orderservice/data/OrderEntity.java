@@ -3,14 +3,20 @@ package com.michal_mm.ois.orderservice.data;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+
 @Table(name="orders")
+@Entity
 public class OrderEntity {
 
 	@Id
-	private UUID orderId;
+	@GeneratedValue
+	@Column(name="order_id")
+	private UUID id;
 	
 	@Column(name="item_id")
 	private UUID itemId;
@@ -27,20 +33,20 @@ public class OrderEntity {
 
 	public OrderEntity(UUID orderId, UUID itemId, String orderName, Integer quantity) {
 		super();
-		this.orderId = orderId;
+		this.id = orderId;
 		this.itemId = itemId;
 		this.orderName = orderName;
 		this.quantity = quantity;
 	}
 
 
-	public UUID getOrderId() {
-		return orderId;
+	public UUID getId() {
+		return id;
 	}
 
 
-	public void setOrderId(UUID orderId) {
-		this.orderId = orderId;
+	public void setId(UUID id) {
+		this.id = id;
 	}
 
 
