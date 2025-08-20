@@ -34,7 +34,7 @@ public class OrderControllerTest {
 	}
 	
 	@Test
-	public void testGetAllOrders_simpleGETScenarioWithFiuxedResponse() {
+	public void testGetAllOrders_simpleGETScenario_returnsValidOrderRest() {
 		// Arrange 
 		UUID uuid = UUID.randomUUID();
 		OrderEntity orderEntity = new OrderEntity(uuid, uuid, "unit test order", 100);
@@ -50,7 +50,7 @@ public class OrderControllerTest {
 	}
 	
 	@Test
-	public void testGetOrderById_WithValidOrderId_ValidOrderRest() {
+	public void testGetOrderById_withValidOrderId_returnsValidOrderRest() {
 		// Arrange
 		UUID orderId = UUID.randomUUID();
 		UUID itemId = UUID.randomUUID();
@@ -69,7 +69,7 @@ public class OrderControllerTest {
 	}
 	
 	@Test
-	public void testCreateOrder_ValidCreateOrderRequest_ValidOrderRest() {
+	public void testCreateOrder_withValidCreateOrderRequest_returnsValidOrderRest() {
 		// Arrange
 		UUID orderId = UUID.randomUUID();
 		UUID itemId = UUID.randomUUID();
