@@ -46,6 +46,7 @@ public class OrderControllerTest {
 		
 		// Assert
 		assertEquals(1, orders.size());
+		assertEquals(uuid.toString(), orders.get(0).getOrderId().toString());
 	}
 	
 	@Test
@@ -75,11 +76,7 @@ public class OrderControllerTest {
 		String orderName = "Unit test order name";
 		Integer quantity = 125;
 		
-		CreateOrderRequest createOrderRequest = new CreateOrderRequest();
-		createOrderRequest.setItemId(itemId);
-		createOrderRequest.setOrderName(orderName);
-		createOrderRequest.setQuantity(quantity);
-		
+		CreateOrderRequest createOrderRequest = new CreateOrderRequest(itemId, orderName, quantity);
 		OrderEntity orderEntity = new OrderEntity(orderId, itemId, orderName, quantity);
 		
 		// Act
