@@ -25,17 +25,23 @@ public class OrderEntity {
 	@Column(name="quantity")
 	private Integer quantity;
 	
+	@Column(name="item_price")
+	private Integer itemPrice;
+	
 
 	public OrderEntity() {}
 
 
-	public OrderEntity(UUID orderId, UUID itemId, String orderName, Integer quantity) {
+	public OrderEntity(UUID orderId, UUID itemId, String orderName, Integer quantity, Integer itemPrice) {
 		super();
 		this.id = orderId;
 		this.itemId = itemId;
 		this.orderName = orderName;
 		this.quantity = quantity;
+		this.itemPrice = itemPrice;
 	}
+
+
 
 
 	public UUID getId() {
@@ -77,6 +83,14 @@ public class OrderEntity {
 		this.quantity = quantity;
 	}
 	
-	
+
+	public Integer getItemPrice() {
+		return itemPrice;
+	}
+
+
+	public void setItemPrice(Integer itemPrice) {
+		this.itemPrice = itemPrice;
+	}
 	
 }

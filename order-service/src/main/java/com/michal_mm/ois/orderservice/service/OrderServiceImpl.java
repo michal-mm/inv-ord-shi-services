@@ -41,7 +41,8 @@ public class OrderServiceImpl implements OrderService {
 								orderEntity.getId(),
 								orderEntity.getItemId(),
 								"FIXED ITEM NAME with FIXED PRICE",
-								12345,
+								orderEntity.getQuantity(),
+								orderEntity.getItemPrice(),
 								orderEntity.getOrderName()
 				);
 	}
@@ -50,26 +51,33 @@ public class OrderServiceImpl implements OrderService {
 		return new OrderEntity(orderRest.getOrderId(),
 				orderRest.getItemId(),
 				orderRest.getOrderName(),
-				8888);
+				orderRest.getQuantity(),
+				orderRest.getPrice());
 	}
 	
 	
 
 	@Override
 	public OrderRest createOrder(CreateOrderRequest createOrderRequest) {
+		// TODO - this should be remote call to inventory service
+		// success depends on the itemId and the quantity (inventory service has to have enough items)
+		int itemPrice = 10000;
+		String itemName = "Fixed item name (from POST req to OrderService)";
+		
 		OrderRest orderRest = new OrderRest(
 				UUID.randomUUID(),
 				createOrderRequest.getItemId(),
-				"Fixed item name through POST request",
-				9999,
+				itemName,
+				createOrderRequest.getQuantity(),
+				itemPrice, 
 				createOrderRequest.getOrderName()
 				);
 		
-		OrderEntity orderEntity = getOrderEntityFromOrderRest(orderRest);
+//		OrderEntity orderEntity = getOrderEntityFromOrderRest(orderRest);
+//		
+//		OrderEntity savedOrderEntity = orderRepository.save(getOrderEntityFromOrderRest(orderRest));
 		
-		OrderEntity savedOrderEntity = orderRepository.save(orderEntity);
-		
-		return getOrderRestFromOrderEntity(savedOrderEntity);
+		return getOrderRestFromOrderEntity(orderRepository.save(getOrderEntityFromOrderRest(orderRest)));
 	}
 
 	

@@ -12,6 +12,8 @@ public class OrderRest {
 	
 	private Integer price;
 	
+	private Integer quantity;
+	
 	private String orderName;
 	
 	
@@ -19,11 +21,12 @@ public class OrderRest {
 
 
 	public OrderRest(UUID orderId, UUID itemId,
-			String itemName, Integer price, String orderName) {
+			String itemName, Integer quantity, Integer price, String orderName) {
 		this.orderId = orderId;
 		this.itemId = itemId;
 		this.itemName = itemName;
 		this.price = price;
+		this.quantity = quantity;
 		this.orderName = orderName;
 	}
 
@@ -77,10 +80,21 @@ public class OrderRest {
 		this.orderName = orderName;
 	}
 
+	
+
+	public Integer getQuantity() {
+		return quantity;
+	}
+
+
+	public void setQuantity(Integer quantity) {
+		this.quantity = quantity;
+	}
+
 
 	@Override
 	public String toString() {
 		return "OrderRest [orderId=" + orderId + ", itemId=" + itemId + ", itemName=" + itemName + ", price=" + price
-				+ ", orderName=" + orderName + "]";
+				+ ", quantity=" + quantity + ", orderName=" + orderName + "]";
 	}
 }

@@ -37,7 +37,7 @@ public class OrderControllerTest {
 	public void testGetAllOrders_simpleGETScenario_returnsValidOrderRest() {
 		// Arrange 
 		UUID uuid = UUID.randomUUID();
-		OrderEntity orderEntity = new OrderEntity(uuid, uuid, "unit test order", 100);
+		OrderEntity orderEntity = new OrderEntity(uuid, uuid, "unit test order", 100, 5);
 		
 		// Act
 		when(orderRepository.findAll()).thenReturn(List.of(orderEntity));
@@ -55,7 +55,7 @@ public class OrderControllerTest {
 		UUID orderId = UUID.randomUUID();
 		UUID itemId = UUID.randomUUID();
 		String orderName = "unit test order";
-		OrderEntity orderEntity = new OrderEntity(orderId, itemId, orderName, 100);
+		OrderEntity orderEntity = new OrderEntity(orderId, itemId, orderName, 100, 5);
 		
 		// Act
 		when(orderRepository.findOrderById(orderId)).thenReturn(orderEntity);
@@ -75,9 +75,10 @@ public class OrderControllerTest {
 		UUID itemId = UUID.randomUUID();
 		String orderName = "Unit test order name";
 		Integer quantity = 125;
+		Integer itemPrice = 5;
 		
 		CreateOrderRequest createOrderRequest = new CreateOrderRequest(itemId, orderName, quantity);
-		OrderEntity orderEntity = new OrderEntity(orderId, itemId, orderName, quantity);
+		OrderEntity orderEntity = new OrderEntity(orderId, itemId, orderName, quantity, itemPrice);
 		
 		// Act
 		when(orderRepository.save(any(OrderEntity.class))).thenReturn(orderEntity);
