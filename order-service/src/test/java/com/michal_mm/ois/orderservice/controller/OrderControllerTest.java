@@ -45,7 +45,7 @@ public class OrderControllerTest {
 		
 		// Assert
 		assertEquals(1, orders.size());
-		assertEquals(uuid.toString(), orders.get(0).getOrderId().toString());
+		assertEquals(uuid.toString(), orders.getFirst().getOrderId().toString());
 	}
 	
 	@Test
