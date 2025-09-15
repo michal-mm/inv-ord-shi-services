@@ -72,12 +72,8 @@ public class OrderServiceImpl implements OrderService {
 				itemPrice, 
 				createOrderRequest.getOrderName()
 				);
-		
-//		OrderEntity orderEntity = getOrderEntityFromOrderRest(orderRest);
-//		
-//		OrderEntity savedOrderEntity = orderRepository.save(getOrderEntityFromOrderRest(orderRest));
-		
-		return getOrderRestFromOrderEntity(orderRepository.save(getOrderEntityFromOrderRest(orderRest)));
+
+        return getOrderRestFromOrderEntity(orderRepository.save(getOrderEntityFromOrderRest(orderRest)));
 	}
 
 	
