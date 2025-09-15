@@ -44,9 +44,9 @@ public class InventoryController {
     }
 
     @PatchMapping("/{itemId}")
-    public ItemRest updateItemDetals(@PathVariable UUID itemId,
-                                     @RequestParam("price") Optional<Integer> price,
-                                     @RequestParam("amount") Optional<Integer> amount) {
+    public ItemRest updateItemDetails(@PathVariable UUID itemId,
+                                      @RequestParam("price") Optional<Integer> price,
+                                      @RequestParam("amount") Optional<Integer> amount) {
         // TODO - implement method body
 
         return new ItemRest(itemId,
