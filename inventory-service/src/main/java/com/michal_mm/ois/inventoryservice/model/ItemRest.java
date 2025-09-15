@@ -3,7 +3,7 @@ package com.michal_mm.ois.inventoryservice.model;
 import java.util.UUID;
 
 public class ItemRest {
-    // TODO
+
     private UUID itemId;
 
     private String itemName;
