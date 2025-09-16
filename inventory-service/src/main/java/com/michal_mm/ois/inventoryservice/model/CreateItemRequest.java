@@ -44,7 +44,7 @@ public class CreateItemRequest {
     public String toString() {
         return "CreateItemRequest{" +
                 "itemName='" + itemName + '\'' +
-                ", amoutn=" + amount +
+                ", amount=" + amount +
                 ", price=" + price +
                 '}';
     }
