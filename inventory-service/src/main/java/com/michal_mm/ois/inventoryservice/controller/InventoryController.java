@@ -38,8 +38,10 @@ public class InventoryController {
 
     @PatchMapping("/{itemId}")
     public ItemRest updateItemDetails(@PathVariable UUID itemId,
+                                      @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
                                       @RequestParam("price") Optional<Integer> price,
-                                      @RequestParam("amount") Optional<Integer> amount) {
+                                      @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+                                          @RequestParam("amount") Optional<Integer> amount) {
 
         return inventoryService.updateItem(itemId, amount, price);
     }

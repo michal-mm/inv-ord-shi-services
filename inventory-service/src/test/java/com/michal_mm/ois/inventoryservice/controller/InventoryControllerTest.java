@@ -2,8 +2,10 @@ package com.michal_mm.ois.inventoryservice.controller;
 
 import com.michal_mm.ois.inventoryservice.data.ItemEntity;
 import com.michal_mm.ois.inventoryservice.data.ItemRepository;
+import com.michal_mm.ois.inventoryservice.exception.ItemNotFoundException;
 import com.michal_mm.ois.inventoryservice.model.CreateItemRequest;
 import com.michal_mm.ois.inventoryservice.model.ItemRest;
+import com.michal_mm.ois.inventoryservice.service.InventoryService;
 import com.michal_mm.ois.inventoryservice.service.InventoryServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,6 +27,9 @@ class InventoryControllerTest {
 
     @Mock
     private ItemRepository repository;
+
+    @Mock
+    private InventoryService mockedInventoryService;
 
     @BeforeEach
     void setUp() {
@@ -68,7 +73,7 @@ class InventoryControllerTest {
     }
 
     @Test
-    void getItemById() {
+    void getItemById_withExistingItemID() {
         // Arrange
         // prepare expected output
         UUID itemId = UUID.randomUUID();
@@ -92,6 +97,28 @@ class InventoryControllerTest {
         assertEquals(expectedItemRest.getItemName(), outputItemRest.getItemName());
         assertEquals(expectedItemRest.getAmount(), outputItemRest.getAmount());
         assertEquals(expectedItemRest.getPrice(), outputItemRest.getPrice());
+    }
+
+    @Test
+    void getItemById_ItemIdNotFoundException() {
+        // Arrange
+        // prepare expected output
+        UUID itemId = UUID.randomUUID();
+
+        // prepare mocked inventoryController
+        inventoryController = new InventoryController(mockedInventoryService);
+
+        // mock repo calls
+        when(inventoryController.getItemById(itemId)).thenThrow(new ItemNotFoundException("Unit testing item not found"));
+
+        // Act & Assert
+        ItemRest outputItemRest = null;
+        try {
+            outputItemRest = inventoryController.getItemById(itemId);
+            fail("Didn't get Item Not Found Exception");
+        } catch (ItemNotFoundException e) {
+            assertNull(outputItemRest);
+        }
     }
 
     @Test

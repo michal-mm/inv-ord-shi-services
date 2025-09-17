@@ -2,6 +2,7 @@ package com.michal_mm.ois.inventoryservice.service;
 
 import com.michal_mm.ois.inventoryservice.data.ItemEntity;
 import com.michal_mm.ois.inventoryservice.data.ItemRepository;
+import com.michal_mm.ois.inventoryservice.exception.ItemNotFoundException;
 import com.michal_mm.ois.inventoryservice.model.CreateItemRequest;
 import com.michal_mm.ois.inventoryservice.model.ItemRest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,7 @@ public class InventoryServiceImpl implements InventoryService {
     public ItemRest getItemById(UUID itemId) {
         ItemEntity itemEntity = repository.findItemByItemId(itemId);
         if (itemEntity == null) {
-           System.out.println("Item not found HERE: " + itemId.toString());
-           throw new RuntimeException("Item not found: " + itemId);
+           throw new ItemNotFoundException("Item not found: " + itemId);
         }
 
         return itemEntity2ItemRest(itemEntity);
