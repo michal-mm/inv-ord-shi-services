@@ -15,9 +15,7 @@ import com.michal_mm.ois.orderservice.model.OrderRest;
 public class OrderServiceImpl implements OrderService {
 	
 	@Autowired
-	private OrderRepository orderRepository;
-	
-	public OrderServiceImpl() {}
+	private final OrderRepository orderRepository;
 	
 	public OrderServiceImpl(OrderRepository orderRepository) {
 		this.orderRepository = orderRepository;
@@ -27,13 +25,21 @@ public class OrderServiceImpl implements OrderService {
 	public List<OrderRest> getAllOrders() {
 		
 		return orderRepository.findAll().stream()
-				.map(orderEntity -> getOrderRestFromOrderEntity(orderEntity))
+				.map(this::getOrderRestFromOrderEntity)
 				.toList();
 	}
 
 	@Override
 	public OrderRest getOrderById(UUID orderId) {
-		return getOrderRestFromOrderEntity(orderRepository.findOrderById(orderId));
+
+        OrderEntity orderById = orderRepository.findOrderById(orderId);
+        if(orderById == null) {
+            // TODO
+            // item not found, throw an exception
+            throw new RuntimeException("Item not found");
+        }
+
+        return getOrderRestFromOrderEntity(orderById);
 	}
 
 	private OrderRest getOrderRestFromOrderEntity(OrderEntity orderEntity) {

@@ -15,9 +15,7 @@ import java.util.UUID;
 public class InventoryServiceImpl implements InventoryService {
 
     @Autowired
-    private ItemRepository repository;
-
-    public InventoryServiceImpl(){}
+    private final ItemRepository repository;
 
     public InventoryServiceImpl(ItemRepository repository) {
         this.repository = repository;
@@ -34,8 +32,8 @@ public class InventoryServiceImpl implements InventoryService {
     public ItemRest getItemById(UUID itemId) {
         ItemEntity itemEntity = repository.findItemByItemId(itemId);
         if (itemEntity == null) {
-           System.out.println("Item not found: " + itemId.toString());
-           return null;
+           System.out.println("Item not found HERE: " + itemId.toString());
+           throw new RuntimeException("Item not found: " + itemId);
         }
 
         return itemEntity2ItemRest(itemEntity);
