@@ -1,7 +1,6 @@
 package com.michal_mm.ois.inventoryservice;
 
 import com.michal_mm.ois.inventoryservice.controller.InventoryController;
-import com.michal_mm.ois.inventoryservice.data.ItemRepository;
 import com.michal_mm.ois.inventoryservice.exception.ItemNotFoundException;
 import com.michal_mm.ois.inventoryservice.model.ItemRest;
 import com.michal_mm.ois.inventoryservice.service.InventoryService;
@@ -30,15 +29,8 @@ class InventoryServiceApplicationTests {
     private MockMvc mvc;
 
     @MockitoBean
-    private ItemRepository repository;
-
-    @MockitoBean
     private InventoryService mockedInventoryService;
 
-
-	@Test
-	void contextLoads() {
-	}
 
     @Test
     void getAllItems_thenReturnJsonArray() throws Exception {
@@ -79,5 +71,15 @@ class InventoryServiceApplicationTests {
         mvc.perform(get("/not-existing-uri")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    void testCreateItem_withSuccessfulResponse()  {
+        // TODO - implement testCreateItem_withSuccessfulResponse
+    }
+
+    @Test
+    void testUpdateItem_withSuccessfulResponse()  {
+        // TODO - testUpdateItem_withSuccessfulResponse
     }
 }
