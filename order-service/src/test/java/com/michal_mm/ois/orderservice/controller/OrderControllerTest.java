@@ -1,13 +1,13 @@
 package com.michal_mm.ois.orderservice.controller;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.UUID;
 
+import com.michal_mm.ois.orderservice.exception.OrderNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -66,6 +66,23 @@ public class OrderControllerTest {
 		assertEquals(itemId.toString(), orderRest.getItemId().toString());
 		assertEquals(orderName, orderRest.getOrderName());
 	}
+
+    @Test
+    public void testGetOrderById_withInvalidOrderId_handlesException() {
+        // Arrange
+        UUID orderId = UUID.randomUUID();
+
+        // Act
+        when(orderRepository.findOrderById(orderId)).thenReturn(null);
+        OrderRest orderRest = null;
+        try {
+            orderRest = orderController.getOrderById(orderId);
+            fail("Didn't catch OrderNotFoundException");
+        } catch (OrderNotFoundException e) {
+            assertNotNull(e);
+            assertNull(orderRest);
+        }
+    }
 	
 	@Test
 	public void testCreateOrder_withValidCreateOrderRequest_returnsValidOrderRest() {

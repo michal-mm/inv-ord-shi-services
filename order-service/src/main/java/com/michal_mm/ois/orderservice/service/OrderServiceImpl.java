@@ -3,6 +3,7 @@ package com.michal_mm.ois.orderservice.service;
 import java.util.List;
 import java.util.UUID;
 
+import com.michal_mm.ois.orderservice.exception.OrderNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,9 +35,7 @@ public class OrderServiceImpl implements OrderService {
 
         OrderEntity orderById = orderRepository.findOrderById(orderId);
         if(orderById == null) {
-            // TODO
-            // item not found, throw an exception
-            throw new RuntimeException("Item not found");
+            throw new OrderNotFoundException("OrderID not found " + orderId.toString());
         }
 
         return getOrderRestFromOrderEntity(orderById);
