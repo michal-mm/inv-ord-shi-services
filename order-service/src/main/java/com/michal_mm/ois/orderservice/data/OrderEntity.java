@@ -18,6 +18,9 @@ public class OrderEntity {
 	
 	@Column(name="item_id")
 	private UUID itemId;
+
+    @Column(name="item_name")
+    private String itemName;
 	
 	@Column(name="order_name")
 	private String orderName;
@@ -32,10 +35,11 @@ public class OrderEntity {
 	public OrderEntity() {}
 
 
-	public OrderEntity(UUID orderId, UUID itemId, String orderName, Integer quantity, Integer itemPrice) {
+	public OrderEntity(UUID orderId, UUID itemId, String itemName, String orderName, Integer quantity, Integer itemPrice) {
 		super();
 		this.id = orderId;
 		this.itemId = itemId;
+        this.itemName = itemName;
 		this.orderName = orderName;
 		this.quantity = quantity;
 		this.itemPrice = itemPrice;
@@ -92,5 +96,12 @@ public class OrderEntity {
 	public void setItemPrice(Integer itemPrice) {
 		this.itemPrice = itemPrice;
 	}
-	
+
+    public String getItemName() {
+        return itemName;
+    }
+
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
+    }
 }

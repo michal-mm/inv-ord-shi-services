@@ -1,16 +1,17 @@
 package com.michal_mm.ois.orderservice.service;
 
-import java.util.List;
-import java.util.UUID;
-
-import com.michal_mm.ois.orderservice.exception.OrderNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.michal_mm.ois.orderservice.data.OrderEntity;
 import com.michal_mm.ois.orderservice.data.OrderRepository;
+import com.michal_mm.ois.orderservice.exception.OrderNotFoundException;
 import com.michal_mm.ois.orderservice.model.CreateOrderRequest;
 import com.michal_mm.ois.orderservice.model.OrderRest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClient;
+
+import java.util.List;
+import java.util.UUID;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -21,6 +22,11 @@ public class OrderServiceImpl implements OrderService {
 	public OrderServiceImpl(OrderRepository orderRepository) {
 		this.orderRepository = orderRepository;
 	}
+//
+//    public OrderServiceImpl(OrderRepository orderRepository) {
+//        this.orderRepository = orderRepository;
+//        this.restClient = RestClient.create();
+//    }
 
 	@Override
 	public List<OrderRest> getAllOrders() {
@@ -45,7 +51,7 @@ public class OrderServiceImpl implements OrderService {
 		return new OrderRest(
 								orderEntity.getId(),
 								orderEntity.getItemId(),
-								"FIXED ITEM NAME with FIXED PRICE",
+								orderEntity.getItemName(),
 								orderEntity.getQuantity(),
 								orderEntity.getItemPrice(),
 								orderEntity.getOrderName()
@@ -55,6 +61,7 @@ public class OrderServiceImpl implements OrderService {
 	private OrderEntity getOrderEntityFromOrderRest(OrderRest orderRest) {
 		return new OrderEntity(orderRest.getOrderId(),
 				orderRest.getItemId(),
+                orderRest.getItemName(),
 				orderRest.getOrderName(),
 				orderRest.getQuantity(),
 				orderRest.getPrice());
@@ -64,17 +71,29 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public OrderRest createOrder(CreateOrderRequest createOrderRequest) {
-		// TODO - this should be remote call to inventory service
+		// TODO - refactor to use RestClient and make it injectable
+        String inventoryServiceUrl = "http://localhost:8090/items/{id}";
+
+        RestClient restClient = RestClient.create();
+
+        ResponseEntity<OrderRest> response = restClient.get()
+                .uri(inventoryServiceUrl, createOrderRequest.getItemId())
+                .retrieve()
+                .toEntity(OrderRest.class);
+
+        System.out.println("Response body from inventory service: " + response.getBody());
+        OrderRest tmpOrderRestObj = response.getBody();
+
 		// success depends on the itemId and the quantity (inventory service has to have enough items)
-		int itemPrice = 10000;
-		String itemName = "Fixed item name (from POST req to OrderService)";
+//		int itemPrice = 10000;
+//		String itemName = "Fixed item name (from POST req to OrderService)";
 		
 		OrderRest orderRest = new OrderRest(
 				UUID.randomUUID(),
 				createOrderRequest.getItemId(),
-				itemName,
+				tmpOrderRestObj.getItemName(),
 				createOrderRequest.getQuantity(),
-				itemPrice, 
+				tmpOrderRestObj.getPrice(),
 				createOrderRequest.getOrderName()
 				);
 

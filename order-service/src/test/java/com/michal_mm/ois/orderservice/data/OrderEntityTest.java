@@ -18,6 +18,9 @@ class OrderEntityTest {
     private static final UUID itemId = UUID.randomUUID();
     private static final UUID defaultItemId = UUID.randomUUID();
 
+    private static final String itemName = "Unit Test Item Name";
+    private static final String defaultItemName = "DEFAULT Unit Test Item Name";
+
     private static final String orderName = "Unit Test Order Name";
     private static final String defaultOrderName = "DEFAULT Unit Test Order Name";
 
@@ -30,7 +33,7 @@ class OrderEntityTest {
     @BeforeAll
     public static void setUp() {
         orderEntityDefaultConstructor = new OrderEntity();
-        orderEntityFullConstructor = new OrderEntity(orderId, itemId, orderName, quantity, price);
+        orderEntityFullConstructor = new OrderEntity(orderId, itemId, itemName, orderName, quantity, price);
     }
 
     @Test
@@ -70,6 +73,17 @@ class OrderEntityTest {
     void setOrderName() {
         orderEntityDefaultConstructor.setOrderName(defaultOrderName);
         assertEquals(defaultOrderName, orderEntityDefaultConstructor.getOrderName());
+    }
+
+    @Test
+    void getItemName() {
+        assertEquals(itemName, orderEntityFullConstructor.getItemName());
+    }
+
+    @Test
+    void setItemName() {
+        orderEntityDefaultConstructor.setItemName(defaultItemName);
+        assertEquals(defaultItemName, orderEntityDefaultConstructor.getItemName());
     }
 
     @Test
