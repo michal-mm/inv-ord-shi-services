@@ -10,14 +10,17 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -90,6 +93,27 @@ class OrderServiceApplicationTests {
         // Assert
         mvc.perform(get("/orders/" + uuid)
                         .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void testCreateOrder_withInvalidItemId_expectedItemNotFoundException() throws Exception {
+        // Arrange
+        String jsonInput = """
+                {
+                	"itemId": "a01b82aa-55b6-45dd-89f9-c30b6a2f17aa",
+                    "orderName": "Bon",
+                    "quantity": 150
+                }
+                """;
+
+        // Act
+        when(mockedOrderService.createOrder(any()))
+                .thenThrow(HttpClientErrorException.NotFound.class);
+
+        mvc.perform(post("/orders")
+                    .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonInput))
                 .andExpect(status().isNotFound());
     }
 

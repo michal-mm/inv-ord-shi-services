@@ -18,15 +18,13 @@ public class OrderServiceImpl implements OrderService {
 	
 	@Autowired
 	private final OrderRepository orderRepository;
+
+    private final RestClient restClient;
 	
-	public OrderServiceImpl(OrderRepository orderRepository) {
+	public OrderServiceImpl(OrderRepository orderRepository, RestClient restClient) {
 		this.orderRepository = orderRepository;
+        this.restClient = restClient;
 	}
-//
-//    public OrderServiceImpl(OrderRepository orderRepository) {
-//        this.orderRepository = orderRepository;
-//        this.restClient = RestClient.create();
-//    }
 
 	@Override
 	public List<OrderRest> getAllOrders() {
@@ -73,8 +71,6 @@ public class OrderServiceImpl implements OrderService {
 	public OrderRest createOrder(CreateOrderRequest createOrderRequest) {
 		// TODO - refactor to use RestClient and make it injectable
         String inventoryServiceUrl = "http://localhost:8090/items/{id}";
-
-        RestClient restClient = RestClient.create();
 
         ResponseEntity<OrderRest> response = restClient.get()
                 .uri(inventoryServiceUrl, createOrderRequest.getItemId())
