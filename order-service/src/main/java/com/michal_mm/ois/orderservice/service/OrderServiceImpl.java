@@ -69,7 +69,6 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public OrderRest createOrder(CreateOrderRequest createOrderRequest) {
-		// TODO - refactor to use RestClient and make it injectable
         String inventoryServiceUrl = "http://localhost:8090/items/{id}";
 
         ResponseEntity<OrderRest> response = restClient.get()
