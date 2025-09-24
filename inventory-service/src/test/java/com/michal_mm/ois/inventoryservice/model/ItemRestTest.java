@@ -1,8 +1,9 @@
 package com.michal_mm.ois.inventoryservice.model;
 
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,8 +18,8 @@ class ItemRestTest {
     private static final Integer amount = 555;
     private static final Integer price = 9999;
 
-    @BeforeAll
-    public static void setUp() {
+    @BeforeEach
+    public void setUp() {
         itemRestDefaultConstructor = new ItemRest();
         itemRestFullConstructor = new ItemRest(uuid,
                 itemName,
@@ -86,5 +87,34 @@ class ItemRestTest {
                 '}';
 
         assertEquals(expectedToString, itemRestFullConstructor.toString());
+    }
+
+    @Test
+    void testEquals() {
+        ItemRest anotherFullyInitializiedItemRest = itemRestFullConstructor;
+        ItemRest anotherNotInitializedItemRest = itemRestDefaultConstructor;
+        assertEquals(itemRestFullConstructor, anotherFullyInitializiedItemRest);
+        assertEquals(itemRestDefaultConstructor, anotherNotInitializedItemRest);
+        assertNotEquals(itemRestFullConstructor, itemRestDefaultConstructor);
+        assertNotEquals(null, itemRestFullConstructor);
+        assertNotEquals("Not an item rest object", itemRestFullConstructor);
+    }
+
+    @Test
+    void testEqualsStepByStep() {
+        assertNotEquals(itemRestFullConstructor, itemRestDefaultConstructor);
+        itemRestDefaultConstructor.setItemId(uuid);
+        assertNotEquals(itemRestFullConstructor, itemRestDefaultConstructor);
+        itemRestDefaultConstructor.setItemName(itemName);
+        assertNotEquals(itemRestFullConstructor, itemRestDefaultConstructor);
+        itemRestDefaultConstructor.setAmount(amount);
+        assertNotEquals(itemRestFullConstructor, itemRestDefaultConstructor);
+        itemRestDefaultConstructor.setPrice(price);
+        assertEquals(itemRestFullConstructor, itemRestDefaultConstructor);
+    }
+
+    @Test
+    void testHashCode() {
+        assertEquals(Objects.hash(uuid, itemName, amount, price), itemRestFullConstructor.hashCode());
     }
 }

@@ -1,5 +1,6 @@
 package com.michal_mm.ois.inventoryservice.model;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class ItemRest {
@@ -62,5 +63,23 @@ public class ItemRest {
                 ", amount=" + amount +
                 ", price=" + price +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return switch (o) {
+            case null -> false;
+            case ItemRest itemRest when itemRest.getClass() == this.getClass() ->
+                    Objects.equals(itemId, itemRest.getItemId()) &&
+                            Objects.equals(itemName, itemRest.getItemName()) &&
+                            Objects.equals(amount, itemRest.getAmount()) &&
+                            Objects.equals(price, itemRest.getPrice());
+            default -> false;
+        };
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(itemId, itemName, amount, price);
     }
 }

@@ -25,6 +25,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(InventoryController.class)
 class InventoryServiceApplicationTests {
 
+    public static final UUID ITEM_ID = UUID.randomUUID();
+    public static final String ITEM_NAME = "Junit item name";
+    public static final Integer AMOUNT = 111;
+    public static final Integer PRICE = 9999;
+
     @Autowired
     private MockMvc mvc;
 
@@ -35,33 +40,23 @@ class InventoryServiceApplicationTests {
     @Test
     void getAllItems_thenReturnJsonArray() throws Exception {
         // Arrange
-        // prepare expected output
-        UUID itemId = UUID.randomUUID();
-        String itemName = "Junit item name";
-        Integer amount = 111;
-        Integer price = 9999;
-        ItemRest itemRest = new ItemRest(itemId, itemName, amount, price);
-        List<ItemRest> expectedListOfItemRest = List.of(itemRest);
-
-        // mock service calls
-        when(mockedInventoryService.getAllItems()).thenReturn(expectedListOfItemRest);
+        // prepare expected output & mock service calls
+        when(mockedInventoryService.getAllItems()).thenReturn(List.of(getValidItemRest()));
 
         mvc.perform(get("/items")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].itemName", is(itemName)));
+                .andExpect(jsonPath("$[0].itemName", is(ITEM_NAME)));
     }
 
     @Test
     void getItemById_itemNotFound_getExceptionHandler() throws Exception {
         // Arrange
-        UUID itemId = UUID.randomUUID();
-
         // mock service call
-        when(mockedInventoryService.getItemById(itemId)).thenThrow(new ItemNotFoundException("Junit ItemNotFoundException"));
+        when(mockedInventoryService.getItemById(ITEM_ID)).thenThrow(new ItemNotFoundException("Junit ItemNotFoundException"));
 
-        mvc.perform(get("/items/" + itemId)
+        mvc.perform(get("/items/" + ITEM_ID)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
@@ -81,5 +76,9 @@ class InventoryServiceApplicationTests {
     @Test
     void testUpdateItem_withSuccessfulResponse()  {
         // TODO - testUpdateItem_withSuccessfulResponse
+    }
+
+    private static ItemRest getValidItemRest() {
+        return new ItemRest(ITEM_ID, ITEM_NAME, AMOUNT, PRICE);
     }
 }
