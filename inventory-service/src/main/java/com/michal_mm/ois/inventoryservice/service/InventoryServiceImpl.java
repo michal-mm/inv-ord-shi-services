@@ -48,7 +48,7 @@ public class InventoryServiceImpl implements InventoryService {
     public ItemRest updateItem(UUID itemId, Optional<Integer> amount, Optional<Integer> price) {
         ItemEntity itemEntity2Update = repository.findItemByItemId(itemId);
         if (itemEntity2Update == null) {
-            return null;
+            throw new ItemNotFoundException("Item not found: " + itemId);
         }
 
         amount.ifPresent(itemEntity2Update::setAmount);

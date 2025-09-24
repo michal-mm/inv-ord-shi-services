@@ -97,6 +97,11 @@ class ItemRestTest {
         assertEquals(itemRestDefaultConstructor, anotherNotInitializedItemRest);
         assertNotEquals(itemRestFullConstructor, itemRestDefaultConstructor);
         assertNotEquals(null, itemRestFullConstructor);
+        // keep it this way to test the coverage in ItemRest
+        assertEquals(false, itemRestFullConstructor.equals("Not an item rest object"));
+        // keep it this way to test the coverage in ItemRest
+        assertFalse(itemRestFullConstructor.equals(null));
+
         assertNotEquals("Not an item rest object", itemRestFullConstructor);
     }
 
