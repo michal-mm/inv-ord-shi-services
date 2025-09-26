@@ -96,6 +96,16 @@ class InventoryControllerTest {
     }
 
     @Test
+    void getItemById_repositoryReturnsNull_thenThrowsItemNotFoundException() {
+        // Arrange and Act
+        when(repository.findItemByItemId(ITEM_ID)).thenReturn(null);
+
+        // Assert
+        assertThrows(ItemNotFoundException.class, () ->
+                inventoryController.getItemById(ITEM_ID));
+    }
+
+    @Test
     void createNewItem() {
         // Arrange
         // prepare expected output
@@ -142,6 +152,18 @@ class InventoryControllerTest {
         // Assert
         assertEquals(expectedItemRest, returnedUpdatedItemRest);
         assertNotEquals(expectedItemRest, getValidItemRest());
+    }
+
+    @Test
+    void updateItemDetails_withInvalidItemId_throwsItemNotFoundException () {
+        // Arrange & Act
+        when(repository.findItemByItemId(ITEM_ID)).thenReturn(null);
+
+        // Assert
+        assertThrows(ItemNotFoundException.class, () ->
+                inventoryController.updateItemDetails(ITEM_ID,
+                        Optional.empty(),
+                        Optional.empty()));
     }
 
     private static ItemEntity getValidItemEntity() {

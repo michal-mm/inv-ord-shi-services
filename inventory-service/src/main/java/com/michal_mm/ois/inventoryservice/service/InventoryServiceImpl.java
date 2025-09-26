@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -57,10 +58,8 @@ public class InventoryServiceImpl implements InventoryService {
         return itemEntity2ItemRest(repository.save(itemEntity2Update));
     }
 
-    private ItemRest itemEntity2ItemRest(ItemEntity itemEntity) {
-        if (itemEntity == null) {
-            return null;
-        }
+    private ItemRest itemEntity2ItemRest(ItemEntity itemEntityRaw) {
+        ItemEntity itemEntity = Objects.requireNonNull(itemEntityRaw);
 
         return new ItemRest(itemEntity.getItemId(),
                 itemEntity.getItemName(),
