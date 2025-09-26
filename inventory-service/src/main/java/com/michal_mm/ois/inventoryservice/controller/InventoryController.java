@@ -12,6 +12,8 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/items")
+// TODO - extract CORS configuration to a separate Configuration class
+@CrossOrigin
 public class InventoryController {
 
     private final InventoryService inventoryService;
@@ -33,6 +35,7 @@ public class InventoryController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ItemRest createNewItem(@RequestBody CreateItemRequest createItemRequest) {
+        System.out.println("Create Item Request: " + createItemRequest);
         return inventoryService.createItem(createItemRequest);
     }
 

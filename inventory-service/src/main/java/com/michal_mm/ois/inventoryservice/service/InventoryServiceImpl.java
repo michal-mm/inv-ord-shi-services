@@ -61,6 +61,8 @@ public class InventoryServiceImpl implements InventoryService {
     private ItemRest itemEntity2ItemRest(ItemEntity itemEntityRaw) {
         ItemEntity itemEntity = Objects.requireNonNull(itemEntityRaw);
 
+        System.out.println("item entity: " + itemEntity);
+
         return new ItemRest(itemEntity.getItemId(),
                 itemEntity.getItemName(),
                 itemEntity.getAmount(),
