@@ -15,7 +15,6 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -96,8 +95,8 @@ class InventoryServiceApplicationTests {
         expectedItemRest.setPrice(PRICE+additional);
         expectedItemRest.setAmount(AMOUNT+additional);
 
-        Optional<Integer> price = Optional.of(PRICE+additional);
-        Optional<Integer> amount = Optional.of(AMOUNT+additional);
+        Integer price = PRICE+additional;
+        Integer amount = AMOUNT+additional;
 
         when(mockedInventoryService.updateItem(ITEM_ID, price, amount))
                 .thenReturn(expectedItemRest);

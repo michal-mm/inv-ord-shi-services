@@ -46,7 +46,10 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public ItemRest updateItem(UUID itemId, Optional<Integer> amount, Optional<Integer> price) {
+    public ItemRest updateItem(UUID itemId, Integer amountRaw, Integer priceRaw) {
+        Optional<Integer> amount = Optional.ofNullable(amountRaw);
+        Optional<Integer> price = Optional.ofNullable(priceRaw);
+
         ItemEntity itemEntity2Update = repository.findItemByItemId(itemId);
         if (itemEntity2Update == null) {
             throw new ItemNotFoundException("Item not found: " + itemId);

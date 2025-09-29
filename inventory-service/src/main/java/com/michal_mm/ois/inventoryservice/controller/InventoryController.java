@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -41,10 +40,8 @@ public class InventoryController {
 
     @PatchMapping("/{itemId}")
     public ItemRest updateItemDetails(@PathVariable UUID itemId,
-                                      @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-                                      @RequestParam("price") Optional<Integer> price,
-                                      @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-                                          @RequestParam("amount") Optional<Integer> amount) {
+                                      @RequestParam(value="price", required=false) Integer price,
+                                      @RequestParam(value="amount", required=false) Integer amount) {
 
         return inventoryService.updateItem(itemId, amount, price);
     }

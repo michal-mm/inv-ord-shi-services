@@ -13,7 +13,6 @@ import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -141,13 +140,41 @@ class InventoryControllerTest {
         mockedItemEntityWithUpdates.setPrice(mockedItemEntityWithUpdates.getPrice()+forUpdate);
 
         // optional price and amount
-        Optional<Integer> optionalAmount = Optional.of(AMOUNT+forUpdate);
-        Optional<Integer> optionalPrice = Optional.of(PRICE+forUpdate);
+        Integer amount = AMOUNT+forUpdate;
+        Integer price = PRICE+forUpdate;
 
         // Act
         when(repository.findItemByItemId(ITEM_ID)).thenReturn(mockedItemEntity);
         when(repository.save(any())).thenReturn(mockedItemEntityWithUpdates);
-        ItemRest returnedUpdatedItemRest = inventoryController.updateItemDetails(ITEM_ID, optionalPrice, optionalAmount);
+        ItemRest returnedUpdatedItemRest = inventoryController.updateItemDetails(ITEM_ID, price, amount);
+
+        // Assert
+        assertEquals(expectedItemRest, returnedUpdatedItemRest);
+        assertNotEquals(expectedItemRest, getValidItemRest());
+    }
+
+    @Test
+    void updateItemDetails_withUpdateOfPriceOnlyAndNullAsAmount() {
+        // Arrange
+        Integer forUpdate = 10000;
+        // prepare expected output
+        ItemRest expectedItemRest = getValidItemRest();
+        expectedItemRest.setAmount(expectedItemRest.getAmount());
+        expectedItemRest.setPrice(expectedItemRest.getPrice()+forUpdate);
+
+        // create ItemEntity object for mocked response
+        ItemEntity mockedItemEntity = getValidItemEntity();
+        ItemEntity mockedItemEntityWithUpdates = getValidItemEntity();
+        mockedItemEntityWithUpdates.setAmount(mockedItemEntityWithUpdates.getAmount());
+        mockedItemEntityWithUpdates.setPrice(mockedItemEntityWithUpdates.getPrice()+forUpdate);
+
+        // optional price and amount
+        Integer price = PRICE+forUpdate;
+
+        // Act
+        when(repository.findItemByItemId(ITEM_ID)).thenReturn(mockedItemEntity);
+        when(repository.save(any())).thenReturn(mockedItemEntityWithUpdates);
+        ItemRest returnedUpdatedItemRest = inventoryController.updateItemDetails(ITEM_ID, price, null);
 
         // Assert
         assertEquals(expectedItemRest, returnedUpdatedItemRest);
@@ -162,8 +189,8 @@ class InventoryControllerTest {
         // Assert
         assertThrows(ItemNotFoundException.class, () ->
                 inventoryController.updateItemDetails(ITEM_ID,
-                        Optional.empty(),
-                        Optional.empty()));
+                        null,
+                        null));
     }
 
     private static ItemEntity getValidItemEntity() {
