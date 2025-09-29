@@ -68,13 +68,12 @@ public class ItemRest {
     @Override
     public boolean equals(Object o) {
         return switch (o) {
-            case null -> false;
             case ItemRest itemRest when itemRest.getClass() == this.getClass() ->
                     Objects.equals(itemId, itemRest.getItemId()) &&
                             Objects.equals(itemName, itemRest.getItemName()) &&
                             Objects.equals(amount, itemRest.getAmount()) &&
                             Objects.equals(price, itemRest.getPrice());
-            default -> false;
+            case null, default -> false;
         };
     }
 
