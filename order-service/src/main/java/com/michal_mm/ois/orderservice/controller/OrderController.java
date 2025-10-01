@@ -12,8 +12,6 @@ import com.michal_mm.ois.orderservice.service.OrderService;
 
 @RestController()
 @RequestMapping("/orders")
-// TODO extract Cors configuration
-@CrossOrigin
 public class OrderController {
 	
 	private final OrderService orderService;

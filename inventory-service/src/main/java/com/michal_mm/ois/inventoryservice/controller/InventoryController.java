@@ -11,8 +11,6 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/items")
-// TODO - extract CORS configuration to a separate Configuration
-@CrossOrigin
 public class InventoryController {
 
     private final InventoryService inventoryService;
