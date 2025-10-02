@@ -3,6 +3,8 @@ package com.michal_mm.ois.inventoryservice.model;
 import java.util.Objects;
 import java.util.UUID;
 
+/// {ItemRest} class is used as DTO object to transfer data
+/// representing an Item for REST request and responses.
 public class ItemRest {
 
     private UUID itemId;

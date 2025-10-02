@@ -32,7 +32,6 @@ public class InventoryController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ItemRest createNewItem(@RequestBody CreateItemRequest createItemRequest) {
-        System.out.println("Create Item Request: " + createItemRequest);
         return inventoryService.createItem(createItemRequest);
     }
 
