@@ -2,6 +2,8 @@ package com.michal_mm.ois.orderservice.model;
 
 import java.util.UUID;
 
+/// {OrderRest} object is used as DTO to transfer the object
+/// across request and response
 public class OrderRest {
 
 	private UUID orderId;

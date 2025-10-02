@@ -2,6 +2,7 @@ package com.michal_mm.ois.orderservice.service;
 
 import com.michal_mm.ois.orderservice.data.OrderEntity;
 import com.michal_mm.ois.orderservice.data.OrderRepository;
+import com.michal_mm.ois.orderservice.exception.NotEnoughItemsInInventoryException;
 import com.michal_mm.ois.orderservice.exception.OrderNotFoundException;
 import com.michal_mm.ois.orderservice.model.CreateOrderRequest;
 import com.michal_mm.ois.orderservice.model.OrderRest;
@@ -76,13 +77,15 @@ public class OrderServiceImpl implements OrderService {
                 .retrieve()
                 .toEntity(OrderRest.class);
 
-        System.out.println("Response body from inventory service: " + response.getBody());
         OrderRest tmpOrderRestObj = response.getBody();
 
 		// success depends on the itemId and the quantity (inventory service has to have enough items)
-//		int itemPrice = 10000;
-//		String itemName = "Fixed item name (from POST req to OrderService)";
-		
+		if (tmpOrderRestObj.getQuantity() < createOrderRequest.getQuantity()) {
+            throw new NotEnoughItemsInInventoryException("Not enough items "
+                    + "item_id:[" + tmpOrderRestObj.getItemId() + "] "
+                    + tmpOrderRestObj.getItemName() + "="
+                    + tmpOrderRestObj.getQuantity() + " in inventory");
+        }
 		OrderRest orderRest = new OrderRest(
 				UUID.randomUUID(),
 				createOrderRequest.getItemId(),

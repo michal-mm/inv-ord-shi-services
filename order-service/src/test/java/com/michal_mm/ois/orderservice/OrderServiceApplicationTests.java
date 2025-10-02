@@ -3,6 +3,7 @@ package com.michal_mm.ois.orderservice;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.michal_mm.ois.orderservice.controller.OrderController;
+import com.michal_mm.ois.orderservice.exception.NotEnoughItemsInInventoryException;
 import com.michal_mm.ois.orderservice.exception.OrderNotFoundException;
 import com.michal_mm.ois.orderservice.model.CreateOrderRequest;
 import com.michal_mm.ois.orderservice.model.OrderRest;
@@ -101,6 +102,21 @@ class OrderServiceApplicationTests {
 
         mvc.perform(post("/orders")
                     .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonInput))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void testCreateOrder_withTooMuchQuantity_throwsNotEnoughItemsInInventoryException() throws Exception {
+        // Arrange
+        String jsonInput = createOrderRequest2JsonStr(getCreateOrderRequestNotExistingId());
+
+        // Act
+        when(mockedOrderService.createOrder(any()))
+                .thenThrow(NotEnoughItemsInInventoryException.class);
+
+        mvc.perform(post("/orders")
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonInput))
                 .andExpect(status().isNotFound());
     }

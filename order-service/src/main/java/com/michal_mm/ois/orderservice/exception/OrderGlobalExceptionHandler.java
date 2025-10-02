@@ -24,6 +24,13 @@ public class OrderGlobalExceptionHandler {
         return strBuilder.toString();
     }
 
+    @ExceptionHandler(NotEnoughItemsInInventoryException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String notEnoughItemsInInventory(NotEnoughItemsInInventoryException e) {
+        logger.warn(e.getMessage());
+        return e.getMessage();
+    }
+
     @ExceptionHandler(HttpClientErrorException.NotFound.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String itemNotFoundHandler (HttpClientErrorException.NotFound e) {

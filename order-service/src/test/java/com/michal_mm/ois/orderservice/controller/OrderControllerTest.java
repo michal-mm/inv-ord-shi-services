@@ -2,6 +2,7 @@ package com.michal_mm.ois.orderservice.controller;
 
 import com.michal_mm.ois.orderservice.data.OrderEntity;
 import com.michal_mm.ois.orderservice.data.OrderRepository;
+import com.michal_mm.ois.orderservice.exception.NotEnoughItemsInInventoryException;
 import com.michal_mm.ois.orderservice.exception.OrderNotFoundException;
 import com.michal_mm.ois.orderservice.model.CreateOrderRequest;
 import com.michal_mm.ois.orderservice.model.OrderRest;
@@ -142,6 +143,27 @@ public class OrderControllerTest {
 
         // Assert
         assertThrows(HttpClientErrorException.NotFound.class, () ->
+                orderController.createOrder(createOrderRequest));
+        verifyNoInteractions(orderRepository);
+    }
+
+    @Test
+    public void testCreateOrder_withToomanyItemsRequested_throwsNotEnoughItemsInInventoryException() {
+        // Arrange
+        CreateOrderRequest createOrderRequest = getValidCreateOrderRequest();
+        OrderEntity orderEntity = getValidOrderEntity();
+        OrderRest mockedOrderRest = getValidOrderRest();
+        // set quantity to zero to cause problem with order placement
+        mockedOrderRest.setQuantity(0);
+        ResponseEntity<OrderRest> responseEntityMocked = ResponseEntity.of(Optional.of(mockedOrderRest));
+
+        mockSuccessfulCallToInventoryService(responseEntityMocked);
+
+        // we set this mock to prove that order was not saved because of an exception
+        when(orderRepository.save(any(OrderEntity.class))).thenReturn(orderEntity);
+
+        // Act & Assert
+        assertThrows(NotEnoughItemsInInventoryException.class, () ->
                 orderController.createOrder(createOrderRequest));
         verifyNoInteractions(orderRepository);
     }
