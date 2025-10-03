@@ -5,19 +5,24 @@ import com.michal_mm.ois.orderservice.data.OrderRepository;
 import com.michal_mm.ois.orderservice.exception.NotEnoughItemsInInventoryException;
 import com.michal_mm.ois.orderservice.exception.OrderNotFoundException;
 import com.michal_mm.ois.orderservice.model.CreateOrderRequest;
+import com.michal_mm.ois.orderservice.model.ItemRestDTO;
 import com.michal_mm.ois.orderservice.model.OrderRest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
 public class OrderServiceImpl implements OrderService {
-	
-	@Autowired
+
+    public static final String URL_INVENTORY_SERVICE = "http://localhost:8090/items";
+    @Autowired
 	private final OrderRepository orderRepository;
 
     private final RestClient restClient;
@@ -70,34 +75,59 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public OrderRest createOrder(CreateOrderRequest createOrderRequest) {
-        String inventoryServiceUrl = "http://localhost:8090/items/{id}";
+        String inventoryServiceUrl = URL_INVENTORY_SERVICE + "/{id}";
 
-        ResponseEntity<OrderRest> response = restClient.get()
+        ResponseEntity<ItemRestDTO> response = restClient.get()
                 .uri(inventoryServiceUrl, createOrderRequest.getItemId())
                 .retrieve()
-                .toEntity(OrderRest.class);
+                .toEntity(ItemRestDTO.class);
 
-        OrderRest tmpOrderRestObj = response.getBody();
+        ItemRestDTO tmpItemRestDTO = response.getBody();
 
 		// success depends on the itemId and the quantity (inventory service has to have enough items)
-		if (tmpOrderRestObj.getQuantity() < createOrderRequest.getQuantity()) {
-            throw new NotEnoughItemsInInventoryException("Not enough items "
-                    + "item_id:[" + tmpOrderRestObj.getItemId() + "] "
-                    + tmpOrderRestObj.getItemName() + "="
-                    + tmpOrderRestObj.getQuantity() + " in inventory");
-        }
-		OrderRest orderRest = new OrderRest(
+        verifyIfEnoughItemsAndUpdateTheInventory(createOrderRequest, tmpItemRestDTO);
+
+        OrderRest orderRest = new OrderRest(
 				UUID.randomUUID(),
 				createOrderRequest.getItemId(),
-				tmpOrderRestObj.getItemName(),
+				Objects.requireNonNull(tmpItemRestDTO).itemName(),
 				createOrderRequest.getQuantity(),
-				tmpOrderRestObj.getPrice(),
+				tmpItemRestDTO.price(),
 				createOrderRequest.getOrderName()
 				);
 
         return getOrderRestFromOrderEntity(orderRepository.save(getOrderEntityFromOrderRest(orderRest)));
 	}
 
-	
-	
+    private void verifyIfEnoughItemsAndUpdateTheInventory(CreateOrderRequest createOrderRequest,
+                                                          ItemRestDTO tmpItemRestDTO) {
+        verifyEnoughItems(createOrderRequest, tmpItemRestDTO);
+        updateInventoryWithOrder(createOrderRequest.getItemId(),
+                tmpItemRestDTO.amount()-createOrderRequest.getQuantity());
+    }
+
+    private void updateInventoryWithOrder(UUID itemId, Integer updatedAmount) {
+        String inventoryServiceUrl = URL_INVENTORY_SERVICE + "/{id}";
+
+        URI uri = UriComponentsBuilder.fromUriString(inventoryServiceUrl)
+                .queryParam("amount", updatedAmount)
+                .buildAndExpand(itemId)
+                .toUri();
+
+        restClient.patch()
+                .uri(uri)
+                .retrieve()
+                .toEntity(ItemRestDTO.class);
+    }
+
+    private void verifyEnoughItems(CreateOrderRequest createOrderRequest, ItemRestDTO tmpItemRestDTO) {
+        if (tmpItemRestDTO.amount() < createOrderRequest.getQuantity()) {
+            throw new NotEnoughItemsInInventoryException("Not enough items "
+                    + "item_id:[" + tmpItemRestDTO.itemId() + "] "
+                    + tmpItemRestDTO.itemName() + "="
+                    + tmpItemRestDTO.amount() + " in inventory");
+        }
+    }
+
+
 }

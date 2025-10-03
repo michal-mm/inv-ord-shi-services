@@ -5,6 +5,7 @@ import com.michal_mm.ois.orderservice.data.OrderRepository;
 import com.michal_mm.ois.orderservice.exception.NotEnoughItemsInInventoryException;
 import com.michal_mm.ois.orderservice.exception.OrderNotFoundException;
 import com.michal_mm.ois.orderservice.model.CreateOrderRequest;
+import com.michal_mm.ois.orderservice.model.ItemRestDTO;
 import com.michal_mm.ois.orderservice.model.OrderRest;
 import com.michal_mm.ois.orderservice.service.OrderServiceImpl;
 import org.jetbrains.annotations.NotNull;
@@ -18,6 +19,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClient.RequestHeadersUriSpec;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -32,6 +34,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@SuppressWarnings({"rawtypes", "unchecked"})
 @SpringBootTest
 public class OrderControllerTest {
 
@@ -106,13 +109,14 @@ public class OrderControllerTest {
 		// Arrange
         CreateOrderRequest createOrderRequest = getValidCreateOrderRequest();
 		OrderEntity orderEntity = getValidOrderEntity();
-        OrderRest orderRestExpected = getValidOrderRest();
-        ResponseEntity<OrderRest> responseEntity = ResponseEntity.of(Optional.of(orderRestExpected));
+        ItemRestDTO itemRestDTOExpected = getValidItemRestDTO();
+        ResponseEntity<ItemRestDTO> responseEntity = ResponseEntity.of(Optional.of(itemRestDTOExpected));
 		
 		// Act
 		when(orderRepository.save(any(OrderEntity.class))).thenReturn(orderEntity);
 
-        mockSuccessfulCallToInventoryService(responseEntity);
+        mockSuccessfulGetCallToInventoryService(responseEntity);
+        mockSuccessfulPatchCallToInventoryService(responseEntity);
 
 		OrderRest savedRest = orderController.createOrder(createOrderRequest);
 		
@@ -148,16 +152,17 @@ public class OrderControllerTest {
     }
 
     @Test
-    public void testCreateOrder_withToomanyItemsRequested_throwsNotEnoughItemsInInventoryException() {
+    public void testCreateOrder_withTooManyItemsRequested_throwsNotEnoughItemsInInventoryException() {
         // Arrange
         CreateOrderRequest createOrderRequest = getValidCreateOrderRequest();
         OrderEntity orderEntity = getValidOrderEntity();
-        OrderRest mockedOrderRest = getValidOrderRest();
+        ItemRestDTO mockedItemRestDTO = getValidItemRestDTOWithZeroAmount();
         // set quantity to zero to cause problem with order placement
-        mockedOrderRest.setQuantity(0);
-        ResponseEntity<OrderRest> responseEntityMocked = ResponseEntity.of(Optional.of(mockedOrderRest));
+//        mockedOrderRest.setQuantity(0);
+        ResponseEntity<ItemRestDTO> responseEntityMocked = ResponseEntity.of(Optional.of(mockedItemRestDTO));
 
-        mockSuccessfulCallToInventoryService(responseEntityMocked);
+        mockSuccessfulGetCallToInventoryService(responseEntityMocked);
+        mockSuccessfulPatchCallToInventoryService(responseEntityMocked);
 
         // we set this mock to prove that order was not saved because of an exception
         when(orderRepository.save(any(OrderEntity.class))).thenReturn(orderEntity);
@@ -175,22 +180,30 @@ public class OrderControllerTest {
         when(restClient.get()).thenReturn(reqHeaders);
         when(reqHeaders.uri(any(), (Object) any())).thenReturn(reqHeaders);
         when(reqHeaders.retrieve()).thenReturn(responseSpec);
-        when(responseSpec.toEntity(OrderRest.class)).thenThrow(HttpClientErrorException.NotFound.class);
+        when(responseSpec.toEntity(ItemRestDTO.class)).thenThrow(HttpClientErrorException.NotFound.class);
     }
 
-    private void mockSuccessfulCallToInventoryService(ResponseEntity<OrderRest> responseEntity) {
+    private void mockSuccessfulGetCallToInventoryService(ResponseEntity<ItemRestDTO> responseEntity) {
         RequestHeadersUriSpec reqHeaders = mock(RequestHeadersUriSpec.class);
         RestClient.ResponseSpec responseSpec = mock(RestClient.ResponseSpec.class);
 
         when(restClient.get()).thenReturn(reqHeaders);
         when(reqHeaders.uri(any(), (Object) any())).thenReturn(reqHeaders);
         when(reqHeaders.retrieve()).thenReturn(responseSpec);
-        when(responseSpec.toEntity(OrderRest.class)).thenReturn(responseEntity);
+        when(responseSpec.toEntity(ItemRestDTO.class)).thenReturn(responseEntity);
     }
 
-    @NotNull
-    private static OrderRest getValidOrderRest() {
-        return new OrderRest(ORDER_ID, ITEM_ID, ITEM_NAME, QUANTITY, ITEM_PRICE, ORDER_NAME);
+    private void mockSuccessfulPatchCallToInventoryService(ResponseEntity<ItemRestDTO> responseEntity) {
+        RestClient.RequestBodyUriSpec requestBodyUriSpec = mock(RestClient.RequestBodyUriSpec.class);
+        RestClient.RequestBodySpec requestBodySpec = mock(RestClient.RequestBodySpec.class);
+        RestClient.ResponseSpec responseSpec = mock(RestClient.ResponseSpec.class);
+
+        when(restClient.patch()).thenReturn(requestBodyUriSpec);
+        when(requestBodyUriSpec.uri(any(), (Object) (any()))).thenReturn(requestBodySpec);
+        when(requestBodyUriSpec.uri((URI) any())).thenReturn(requestBodySpec);
+        when(requestBodySpec.attribute(any(), any())).thenReturn(requestBodySpec);
+        when(requestBodySpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.toEntity(ItemRestDTO.class)).thenReturn(responseEntity);
     }
 
     @NotNull
@@ -205,5 +218,13 @@ public class OrderControllerTest {
                 ORDER_NAME,
                 QUANTITY,
                 ITEM_PRICE);
+    }
+
+    private static ItemRestDTO getValidItemRestDTO() {
+        return new ItemRestDTO(ITEM_ID, ITEM_NAME, QUANTITY, ITEM_PRICE);
+    }
+
+    private static ItemRestDTO getValidItemRestDTOWithZeroAmount() {
+        return new ItemRestDTO(ITEM_ID, ITEM_NAME, 0, ITEM_PRICE);
     }
 }

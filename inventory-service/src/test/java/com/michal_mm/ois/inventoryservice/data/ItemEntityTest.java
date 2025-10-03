@@ -76,4 +76,16 @@ class ItemEntityTest {
         itemEntityDefaultConstructor.setPrice(price);
         assertEquals(price, itemEntityDefaultConstructor.getPrice());
     }
+
+    @Test
+    void testToString() {
+        String expected = "ItemEntity{" +
+                "itemId=" + uuid +
+                ", itemName='" + itemName + '\'' +
+                ", amount=" + amount +
+                ", price=" + price +
+                '}';
+
+        assertEquals(expected, itemEntityFullyInitialized.toString());
+    }
 }
