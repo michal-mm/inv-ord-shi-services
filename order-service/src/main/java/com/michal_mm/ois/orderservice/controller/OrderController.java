@@ -1,21 +1,19 @@
 package com.michal_mm.ois.orderservice.controller;
 
-import java.util.List;
-import java.util.UUID;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-
 import com.michal_mm.ois.orderservice.model.CreateOrderRequest;
 import com.michal_mm.ois.orderservice.model.OrderRest;
 import com.michal_mm.ois.orderservice.service.OrderService;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
 
 @RestController()
 @RequestMapping("/orders")
 public class OrderController {
 	
 	private final OrderService orderService;
-	
 	
 	public OrderController(OrderService orderService) {
 		this.orderService = orderService;
@@ -36,6 +34,6 @@ public class OrderController {
 	@PostMapping()
 	@ResponseStatus(HttpStatus.CREATED)
 	public OrderRest createOrder (@RequestBody CreateOrderRequest createOrderRequest) {
-		return orderService.createOrder(createOrderRequest)
-;	}
+		return orderService.createOrder(createOrderRequest);
+	}
 }

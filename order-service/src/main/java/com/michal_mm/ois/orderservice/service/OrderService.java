@@ -8,9 +8,11 @@ import com.michal_mm.ois.orderservice.model.OrderRest;
 
 public interface OrderService {
 
-	public List<OrderRest> getAllOrders();
+	List<OrderRest> getAllOrders();
 	
-	public OrderRest getOrderById(UUID orderId);
+	OrderRest getOrderById(UUID orderId);
 	
-	public OrderRest createOrder(CreateOrderRequest createOrderRequest);
+	OrderRest createOrder(CreateOrderRequest createOrderRequest);
+
+    void doSimpleJob(String anArgument) throws InterruptedException;
 }

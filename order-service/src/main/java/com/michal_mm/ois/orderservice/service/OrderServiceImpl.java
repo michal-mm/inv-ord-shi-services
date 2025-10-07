@@ -17,6 +17,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.random.RandomGenerator;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -98,6 +99,13 @@ public class OrderServiceImpl implements OrderService {
 
         return getOrderRestFromOrderEntity(orderRepository.save(getOrderEntityFromOrderRest(orderRest)));
 	}
+
+    public void doSimpleJob(String anArgument) throws InterruptedException {
+        long millSecsOfSleep = RandomGenerator.getDefault().nextInt(10000);
+        System.out.println("Falling asleep for " + millSecsOfSleep + "ms before executing [" + anArgument + "]");
+        Thread.sleep(millSecsOfSleep);
+        System.out.println("This is an easy job triggered by JobRunr - " + anArgument);
+    }
 
     private void verifyIfEnoughItemsAndUpdateTheInventory(CreateOrderRequest createOrderRequest,
                                                           ItemRestDTO tmpItemRestDTO) {
