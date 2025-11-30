@@ -10,6 +10,7 @@ import com.michal_mm.ois.inventoryservice.service.InventoryServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
@@ -37,7 +38,11 @@ class InventoryControllerTest {
 
     @BeforeEach
     void setUp() {
-        inventoryController = new InventoryController(new InventoryServiceImpl(repository));
+        try (var _ = MockitoAnnotations.openMocks(this)) {
+            inventoryController = new InventoryController(new InventoryServiceImpl(repository));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test
