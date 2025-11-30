@@ -1,7 +1,5 @@
 package com.michal_mm.ois.inventoryservice;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.michal_mm.ois.inventoryservice.controller.InventoryController;
 import com.michal_mm.ois.inventoryservice.exception.ItemNotFoundException;
 import com.michal_mm.ois.inventoryservice.model.CreateItemRequest;
@@ -9,10 +7,11 @@ import com.michal_mm.ois.inventoryservice.model.ItemRest;
 import com.michal_mm.ois.inventoryservice.service.InventoryService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import tools.jackson.databind.ObjectMapper;
 
 import java.util.List;
 import java.util.UUID;
@@ -116,7 +115,7 @@ class InventoryServiceApplicationTests {
         return new CreateItemRequest(ITEM_NAME, AMOUNT, PRICE);
     }
 
-    private String object2JsonStr(Object object) throws JsonProcessingException {
+    private String object2JsonStr(Object object)  {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.writeValueAsString(object);
     }

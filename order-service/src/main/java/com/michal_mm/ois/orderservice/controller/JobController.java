@@ -3,6 +3,7 @@ package com.michal_mm.ois.orderservice.controller;
 import com.michal_mm.ois.orderservice.service.OrderService;
 import org.jobrunr.jobs.JobId;
 import org.jobrunr.scheduling.JobScheduler;
+import org.jobrunr.storage.StorageProvider;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,8 +13,8 @@ import java.util.random.RandomGenerator;
 
 import static java.time.Instant.now;
 
-@RestController()
-@RequestMapping("/jobs")
+//@RestController()
+//@RequestMapping("/jobs")
 public class JobController {
 
     private final OrderService orderService;
@@ -25,7 +26,7 @@ public class JobController {
         this.jobScheduler = jobScheduler;
     }
 
-    @GetMapping("/{aJob}")
+    //@GetMapping("/{aJob}")
     public String scheduleJob(@PathVariable String aJob) throws InterruptedException {
         if (aJob != null && aJob.equals("no-schedule")){
             orderService.doSimpleJob("NOT-SCHEDULED");
@@ -38,7 +39,7 @@ public class JobController {
         }
     }
 
-    @GetMapping
+    //@GetMapping
     public String scheduleJobWithRandomName() {
         String name = "TEST-JOB-" + String.format(""+ RandomGenerator.getDefault().nextInt(100_000), "%6d");
 
