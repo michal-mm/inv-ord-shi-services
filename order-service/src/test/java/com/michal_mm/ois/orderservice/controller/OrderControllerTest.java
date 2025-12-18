@@ -123,9 +123,9 @@ public class OrderControllerTest {
 		
 		// Assert
         verify(orderRepository).save(argThat(entity ->
-                entity.getItemId().equals(createOrderRequest.getItemId()) &&
-                        entity.getOrderName().equals(createOrderRequest.getOrderName()) &&
-                        entity.getQuantity().equals(createOrderRequest.getQuantity())
+                entity.getItemId().equals(createOrderRequest.itemId()) &&
+                        entity.getOrderName().equals(createOrderRequest.orderName()) &&
+                        entity.getQuantity().equals(createOrderRequest.quantity())
         ));
 
 		assertNotNull(savedRest);

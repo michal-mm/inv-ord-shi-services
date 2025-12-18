@@ -79,7 +79,7 @@ public class OrderServiceImpl implements OrderService {
         String inventoryServiceUrl = URL_INVENTORY_SERVICE + "/{id}";
 
         ResponseEntity<ItemRestDTO> response = restClient.get()
-                .uri(inventoryServiceUrl, createOrderRequest.getItemId())
+                .uri(inventoryServiceUrl, createOrderRequest.itemId())
                 .retrieve()
                 .toEntity(ItemRestDTO.class);
 
@@ -90,11 +90,11 @@ public class OrderServiceImpl implements OrderService {
 
         OrderRest orderRest = new OrderRest(
 				UUID.randomUUID(),
-				createOrderRequest.getItemId(),
+				createOrderRequest.itemId(),
 				Objects.requireNonNull(tmpItemRestDTO).itemName(),
-				createOrderRequest.getQuantity(),
+				createOrderRequest.quantity(),
 				tmpItemRestDTO.price(),
-				createOrderRequest.getOrderName()
+				createOrderRequest.orderName()
 				);
 
         return getOrderRestFromOrderEntity(orderRepository.save(getOrderEntityFromOrderRest(orderRest)));
@@ -110,8 +110,8 @@ public class OrderServiceImpl implements OrderService {
     private void verifyIfEnoughItemsAndUpdateTheInventory(CreateOrderRequest createOrderRequest,
                                                           ItemRestDTO tmpItemRestDTO) {
         verifyEnoughItems(createOrderRequest, tmpItemRestDTO);
-        updateInventoryWithOrder(createOrderRequest.getItemId(),
-                tmpItemRestDTO.amount()-createOrderRequest.getQuantity());
+        updateInventoryWithOrder(createOrderRequest.itemId(),
+                tmpItemRestDTO.amount()-createOrderRequest.quantity());
     }
 
     private void updateInventoryWithOrder(UUID itemId, Integer updatedAmount) {
@@ -129,7 +129,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private void verifyEnoughItems(CreateOrderRequest createOrderRequest, ItemRestDTO tmpItemRestDTO) {
-        if (tmpItemRestDTO.amount() < createOrderRequest.getQuantity()) {
+        if (tmpItemRestDTO.amount() < createOrderRequest.quantity()) {
             throw new NotEnoughItemsInInventoryException("Not enough items "
                     + "item_id:[" + tmpItemRestDTO.itemId() + "] "
                     + tmpItemRestDTO.itemName() + "="
