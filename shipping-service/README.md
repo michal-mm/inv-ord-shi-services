@@ -67,12 +67,21 @@ mvn test
 ```
 
 Test coverage includes:
-- Unit tests for service layer (11 tests)
-- Controller tests (9 tests)
-- Entity tests (3 tests)
-- Application context test (1 test)
+- **Service layer tests** (11 tests) - Business logic validation
+- **Controller tests** (9 tests) - API endpoint testing
+- **Exception handler tests** (9 tests) - Error handling validation
+- **Model/DTO tests** (16 tests) - Data model validation
+- **Entity tests** (3 tests) - JPA entity validation
+- **Exception classes tests** (11 tests) - Custom exception validation
+- **Enum tests** (10 tests) - ShippingStatus enum validation
+- **Application context test** (1 test) - Spring Boot integration
 
-Total: 24 tests
+**Total: 70 tests** with comprehensive coverage including:
+- All business logic paths
+- Error scenarios and exception handling
+- Data model validation
+- API endpoint behavior
+- Edge cases and null handling
 
 ## Business Logic
 
