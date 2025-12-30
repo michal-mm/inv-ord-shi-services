@@ -90,9 +90,7 @@ class InventoryServiceApplicationTests {
     void testUpdateItem_withSuccessfulResponse() throws Exception {
         // Arrange
         int additional = 100;
-        ItemRest expectedItemRest = getValidItemRest();
-        expectedItemRest.setPrice(PRICE+additional);
-        expectedItemRest.setAmount(AMOUNT+additional);
+        ItemRest expectedItemRest = getValidItemRest(AMOUNT+additional, PRICE+additional);
 
         Integer price = PRICE+additional;
         Integer amount = AMOUNT+additional;
@@ -109,6 +107,10 @@ class InventoryServiceApplicationTests {
 
     private static ItemRest getValidItemRest() {
         return new ItemRest(ITEM_ID, ITEM_NAME, AMOUNT, PRICE);
+    }
+
+    private static ItemRest getValidItemRest(Integer amount, Integer price) {
+        return new ItemRest(ITEM_ID, ITEM_NAME, amount, price);
     }
 
     private static CreateItemRequest getValidCreateItemRequest() {

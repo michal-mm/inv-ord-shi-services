@@ -10,8 +10,9 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="Inventory-Service" />
-        <module name="webui" />
         <module name="Order-Service" />
+        <module name="inventory-service" />
+        <module name="webui" />
       </profile>
     </annotationProcessing>
   </component>
@@ -19,6 +20,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="Inventory-Service" options="-parameters" />
       <module name="Order-Service" options="-parameters" />
+      <module name="inventory-service" options="-parameters" />
       <module name="webui" options="-parameters" />
     </option>
   </component>

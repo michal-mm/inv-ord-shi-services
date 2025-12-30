@@ -24,6 +24,7 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 class InventoryControllerTest {
 
+    private static final String NOT_VALID_ITEM_NAME = "NOT VALID ITEM";
     public static final UUID ITEM_ID = UUID.randomUUID();
     public static final String ITEM_NAME = "Junit item name";
     public static final Integer AMOUNT = 111;
@@ -66,8 +67,8 @@ class InventoryControllerTest {
         // Arrange
         // prepare expected output
         ItemRest expectedItemRest = getValidItemRest();
-        ItemRest notExpectedItemRest = getValidItemRest();
-        notExpectedItemRest.setItemName("NOT VALID ITEM");
+        ItemRest notExpectedItemRest = getInvalidItemRest();
+    
 
         // prepare mocked itemEntity response
         // mock repo calls
@@ -134,9 +135,7 @@ class InventoryControllerTest {
         // Arrange
         Integer forUpdate = 10000;
         // prepare expected output
-        ItemRest expectedItemRest = getValidItemRest();
-        expectedItemRest.setAmount(expectedItemRest.getAmount()+forUpdate);
-        expectedItemRest.setPrice(expectedItemRest.getPrice()+forUpdate);
+        ItemRest expectedItemRest = getValidItemRest(AMOUNT+forUpdate, PRICE+forUpdate);
 
         // create ItemEntity object for mocked response
         ItemEntity mockedItemEntity = getValidItemEntity();
@@ -163,9 +162,7 @@ class InventoryControllerTest {
         // Arrange
         Integer forUpdate = 10000;
         // prepare expected output
-        ItemRest expectedItemRest = getValidItemRest();
-        expectedItemRest.setAmount(expectedItemRest.getAmount());
-        expectedItemRest.setPrice(expectedItemRest.getPrice()+forUpdate);
+        ItemRest expectedItemRest = getValidItemRest(AMOUNT, PRICE+forUpdate);
 
         // create ItemEntity object for mocked response
         ItemEntity mockedItemEntity = getValidItemEntity();
@@ -204,6 +201,14 @@ class InventoryControllerTest {
 
     private static ItemRest getValidItemRest() {
         return new ItemRest(ITEM_ID, ITEM_NAME, AMOUNT, PRICE);
+    }
+
+    private static ItemRest getValidItemRest(Integer amount, Integer price) {
+        return new ItemRest(ITEM_ID, ITEM_NAME, amount, price);
+    }
+
+    private static ItemRest getInvalidItemRest() {
+        return new ItemRest(ITEM_ID, NOT_VALID_ITEM_NAME, AMOUNT, PRICE);
     }
 
     private static CreateItemRequest getValidCreateItemRequest() {
