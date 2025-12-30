@@ -30,6 +30,16 @@
             "request": "launch",
             "mainClass": "com.michal_mm.ois.webui.WebuiApplication",
             "projectName": "webui"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-ShippingServiceApplication<shipping-service>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.michal_mm.ois.shippingservice.ShippingServiceApplication",
+            "projectName": "shipping-service",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }
