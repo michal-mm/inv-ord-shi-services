@@ -29,5 +29,4 @@ order-service/.settings/
 order-service/target/
 order-service/.idea/
 out/
-
-shipping-service/target/
+**/target/**
